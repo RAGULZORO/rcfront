@@ -1,0 +1,692 @@
+<!-- <!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Book Your Experience</title>
+  <link rel="stylesheet" href="booking.css" />
+</head>
+<body>
+  <div class="container">
+    <h1>Book Your RC Car Experience</h1>
+    <form id="bookingForm">
+      <input type="text" id="name" placeholder="Your Name" required />
+      <input type="email" id="email" placeholder="Your Email" required />
+      <input type="tel" id="phone" placeholder="Phone Number" required />
+      <input type="date" id="date" required />
+      <select  type="time"id="time" required>
+        <option value="">Choose Time Slot</option>
+        <option value="10-11AM">10 - 11 AM</option>
+        <option value="11-12PM">11 - 12 PM</option>
+        <option value="12-1PM">12 - 1 PM</option>
+        <option value="2-3PM">2 - 3 PM</option>
+      </select>
+      <input type="number" id="people" placeholder="No. of People" min="1" required />
+      <textarea id="message" placeholder="Any Message (Optional)"></textarea>
+      <button type="submit">Book Now</button>
+    </form>
+    <div id="successMsg"></div>
+  </div>
+  <script src="book.js"></script>
+</body>
+</html> -->
+<!-- <!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RC Car Adventure - Book Now</title>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #4CAF50;
+      --secondary: #2196F3;
+      --error: #f44336;
+    }
+    
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    
+    body {
+      font-family: 'Roboto', sans-serif;
+      background: #f5f5f5;
+      color: #333;
+      line-height: 1.6;
+    }
+    
+    .container {
+      max-width: 800px;
+      margin: 2rem auto;
+      padding: 2rem;
+      background: white;
+      border-radius: 10px;
+      box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+    }
+    
+    h1 {
+      text-align: center;
+      color: var(--primary);
+      margin-bottom: 1.5rem;
+      font-size: 2.2rem;
+    }
+    
+    .form-group {
+      margin-bottom: 1.5rem;
+    }
+    
+    label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-weight: bold;
+      color: #555;
+    }
+    
+    input, select, textarea {
+      width: 100%;
+      padding: 12px;
+      border: 2px solid #ddd;
+      border-radius: 6px;
+      font-size: 1rem;
+      transition: border 0.3s;
+    }
+    
+    input:focus, select:focus, textarea:focus {
+      border-color: var(--secondary);
+      outline: none;
+      box-shadow: 0 0 5px rgba(33, 150, 243, 0.3);
+    }
+    
+    .error-message {
+      color: var(--error);
+      font-size: 0.85rem;
+      margin-top: 0.3rem;
+      display: none;
+    }
+    
+    button {
+      background: var(--primary);
+      color: white;
+      border: none;
+      padding: 14px 20px;
+      font-size: 1.1rem;
+      border-radius: 6px;
+      cursor: pointer;
+      width: 100%;
+      transition: background 0.3s;
+      text-transform: uppercase;
+      font-weight: bold;
+      letter-spacing: 1px;
+    }
+    
+    button:hover {
+      background: #45a049;
+    }
+    
+    button:disabled {
+      background: #cccccc;
+      cursor: not-allowed;
+    }
+    
+    .loading {
+      display: inline-block;
+      width: 20px;
+      height: 20px;
+      border: 3px solid rgba(255,255,255,.3);
+      border-radius: 50%;
+      border-top-color: white;
+      animation: spin 1s ease-in-out infinite;
+    }
+    
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+    
+    .success-message {
+      text-align: center;
+      color: var(--primary);
+      font-weight: bold;
+      margin-top: 1rem;
+      display: none;
+    }
+    
+    .time-slots {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+      gap: 10px;
+      margin-top: 10px;
+    }
+    
+    .time-slot {
+      padding: 10px;
+      border: 2px solid #ddd;
+      border-radius: 6px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+    
+    .time-slot:hover {
+      border-color: var(--secondary);
+    }
+    
+    .time-slot.selected {
+      background: var(--secondary);
+      color: white;
+      border-color: var(--secondary);
+    }
+    
+    @media (max-width: 600px) {
+      .container {
+        margin: 1rem;
+        padding: 1.5rem;
+      }
+      
+      h1 {
+        font-size: 1.8rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>🚗 RC Car Adventure</h1>
+    <p style="text-align: center; margin-bottom: 2rem;">Book your high-speed RC car experience today!</p>
+    
+    <form id="bookingForm">
+      <div class="form-group">
+        <label for="name">Full Name</label>
+        <input type="text" id="name" placeholder="John Doe" required>
+        <div class="error-message" id="name-error">Please enter your name</div>
+      </div>
+      
+      <div class="form-group">
+        <label for="email">Email</label>
+        <input type="email" id="email" placeholder="john@example.com" required>
+        <div class="error-message" id="email-error">Please enter a valid email</div>
+      </div>
+      
+      <div class="form-group">
+        <label for="phone">Phone Number</label>
+        <input type="tel" id="phone" placeholder="1234567890" required>
+        <div class="error-message" id="phone-error">Please enter a valid phone number</div>
+      </div>
+      
+      <div class="form-group">
+        <label for="date">Booking Date</label>
+        <input type="date" id="date" required min="">
+        <div class="error-message" id="date-error">Please select a date</div>
+      </div>
+      
+      <div class="form-group">
+        <label>Time Slot</label>
+        <div class="time-slots">
+          <div class="time-slot" data-value="10-11AM">10 - 11 AM</div>
+          <div class="time-slot" data-value="11-12PM">11 - 12 PM</div>
+          <div class="time-slot" data-value="12-1PM">12 - 1 PM</div>
+          <div class="time-slot" data-value="2-3PM">2 - 3 PM</div>
+          <div class="time-slot" data-value="3-4PM">3 - 4 PM</div>
+          <div class="time-slot" data-value="4-5PM">4 - 5 PM</div>
+        </div>
+        <input type="hidden" id="time" required>
+        <div class="error-message" id="time-error">Please select a time slot</div>
+      </div>
+      
+      <div class="form-group">
+        <label for="people">Number of Participants</label>
+        <input type="number" id="people" min="1" max="10" value="1" required>
+        <div class="error-message" id="people-error">Please enter a number between 1-10</div>
+      </div>
+      
+      <div class="form-group">
+        <label for="message">Special Requests (Optional)</label>
+        <textarea id="message" rows="3" placeholder="Any special requirements or notes..."></textarea>
+      </div>
+      
+      <button type="submit" id="submitBtn">
+        <span id="btnText">Book Now</span>
+        <span class="loading" id="loadingSpinner" style="display: none;"></span>
+      </button>
+      
+      <div class="success-message" id="successMessage">
+        Booking successful! We've sent a confirmation to your email.
+      </div>
+    </form>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // Set min date to today
+      const dateInput = document.getElementById('date');
+      const today = new Date().toISOString().split('T')[0];
+      dateInput.min = today;
+      
+      // Time slot selection
+      const timeSlots = document.querySelectorAll('.time-slot');
+      const timeInput = document.getElementById('time');
+      
+      timeSlots.forEach(slot => {
+        slot.addEventListener('click', function() {
+          timeSlots.forEach(s => s.classList.remove('selected'));
+          this.classList.add('selected');
+          timeInput.value = this.getAttribute('data-value');
+          hideError('time-error');
+        });
+      });
+      
+      // Form validation
+      const form = document.getElementById('bookingForm');
+      const submitBtn = document.getElementById('submitBtn');
+      const btnText = document.getElementById('btnText');
+      const loadingSpinner = document.getElementById('loadingSpinner');
+      const successMessage = document.getElementById('successMessage');
+      
+      // Real-time validation
+      document.getElementById('name').addEventListener('input', function() {
+        validateField(this, 'name-error', this.value.trim() !== '');
+      });
+      
+      document.getElementById('email').addEventListener('input', function() {
+        validateField(this, 'email-error', /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(this.value));
+      });
+      
+      document.getElementById('phone').addEventListener('input', function() {
+        validateField(this, 'phone-error', /^\d{10,15}$/.test(this.value));
+      });
+      
+      document.getElementById('date').addEventListener('change', function() {
+        validateField(this, 'date-error', this.value !== '');
+      });
+      
+      document.getElementById('people').addEventListener('input', function() {
+        validateField(this, 'people-error', this.value >= 1 && this.value <= 10);
+      });
+      
+      // Form submission
+      // form.addEventListener('submit -->
+      <!DOCTYPE html>
+      <html lang="en">
+      <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>RC Car Adventure - Book Now</title>
+        <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+        <style>
+          :root {
+            --primary: #FF6B6B;
+            --secondary: #4ECDC4;
+            --dark: #292F36;
+            --light: #F7FFF7;
+          }
+          
+          body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: var(--light);
+            min-height: 100vh;
+            margin: 0;
+            padding: 2rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+          }
+          
+          .container {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            width: 100%;
+            max-width: 800px;
+            padding: 2.5rem;
+            color: var(--dark);
+          }
+          
+          h1 {
+            color: var(--primary);
+            text-align: center;
+            margin-bottom: 1rem;
+            font-size: 2.5rem;
+          }
+          
+          .subtitle {
+            text-align: center;
+            margin-bottom: 2rem;
+            color: #666;
+            font-size: 1.1rem;
+          }
+          
+          .form-group {
+            margin-bottom: 1.5rem;
+          }
+          
+          label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: var(--dark);
+          }
+          
+          input, select, textarea {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: all 0.3s;
+          }
+          
+          input:focus, select:focus, textarea:focus {
+            border-color: var(--secondary);
+            box-shadow: 0 0 0 3px rgba(78, 205, 196, 0.2);
+            outline: none;
+          }
+          
+          .time-slots {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+            gap: 10px;
+            margin-top: 10px;
+          }
+          
+          .time-slot {
+            padding: 10px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            background: white;
+          }
+          
+          .time-slot:hover {
+            border-color: var(--secondary);
+          }
+          
+          .time-slot.selected {
+            background: var(--secondary);
+            color: white;
+            border-color: var(--secondary);
+          }
+          
+          button {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 15px;
+            font-size: 1.1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            width: 100%;
+            transition: all 0.3s;
+            font-weight: 600;
+            margin-top: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+          }
+          
+          button:hover {
+            background: #ff5252;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(255, 107, 107, 0.4);
+          }
+          
+          button:disabled {
+            background: #ccc;
+            transform: none;
+            box-shadow: none;
+            cursor: not-allowed;
+          }
+          
+          .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255,255,255,.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 1s ease-in-out infinite;
+            margin-right: 10px;
+            vertical-align: middle;
+          }
+          
+          @keyframes spin {
+            to { transform: rotate(360deg); }
+          }
+          
+          .success-message {
+            text-align: center;
+            color: var(--secondary);
+            font-weight: 600;
+            margin-top: 1.5rem;
+            padding: 1rem;
+            background: rgba(78, 205, 196, 0.1);
+            border-radius: 8px;
+            display: none;
+          }
+          
+          .error-message {
+            color: var(--primary);
+            font-size: 0.9rem;
+            margin-top: 0.5rem;
+            display: none;
+          }
+        </style>
+      </head>
+      <body>
+        <div class="container">
+          <h1>🚗 RC Car Adventure</h1>
+          <p class="subtitle">Book your high-speed RC car experience today!</p>
+          
+          <form id="bookingForm">
+            <div class="form-group">
+              <label for="name">Full Name</label>
+              <input type="text" id="name" placeholder="John Doe" required>
+              <div class="error-message" id="name-error">Please enter your name</div>
+            </div>
+            
+            <div class="form-group">
+              <label for="email">Email</label>
+              <input type="email" id="email" placeholder="john@example.com" required>
+              <div class="error-message" id="email-error">Please enter a valid email</div>
+            </div>
+            
+            <div class="form-group">
+              <label for="phone">Phone Number</label>
+              <input type="tel" id="phone" placeholder="1234567890" required>
+              <div class="error-message" id="phone-error">Please enter a 10-digit phone number</div>
+            </div>
+            
+            <div class="form-group">
+              <label for="date">Booking Date</label>
+              <input type="date" id="date" required>
+              <div class="error-message" id="date-error">Please select a date</div>
+            </div>
+            
+            <div class="form-group">
+              <label>Time Slot</label>
+              <div class="time-slots">
+                <div class="time-slot" data-value="10-11AM">10 - 11 AM</div>
+                <div class="time-slot" data-value="11-12PM">11 - 12 PM</div>
+                <div class="time-slot" data-value="12-1PM">12 - 1 PM</div>
+                <div class="time-slot" data-value="2-3PM">2 - 3 PM</div>
+                <div class="time-slot" data-value="3-4PM">3 - 4 PM</div>
+                <div class="time-slot" data-value="4-5PM">4 - 5 PM</div>
+              </div>
+              <input type="hidden" id="time" required>
+              <div class="error-message" id="time-error">Please select a time slot</div>
+            </div>
+            
+            <div class="form-group">
+              <label for="people">Number of Participants</label>
+              <input type="number" id="people" min="1" max="10" value="1" required>
+              <div class="error-message" id="people-error">Please enter a number between 1-10</div>
+            </div>
+            
+            <div class="form-group">
+              <label for="message">Special Requests (Optional)</label>
+              <textarea id="message" rows="3" placeholder="Any special requirements..."></textarea>
+            </div>
+            
+            <button type="submit" id="submitBtn">
+              <span id="btnText">Book Now</span>
+              <span class="loading" id="loadingSpinner" style="display: none;"></span>
+            </button>
+            
+            <div class="success-message" id="successMessage">
+              ✅ Booking successful! A confirmation has been sent to your email.
+            </div>
+          </form>
+        </div>
+      
+        <script>
+          document.addEventListener('DOMContentLoaded', function() {
+            // Set min date to today
+            const dateInput = document.getElementById('date');
+            const today = new Date().toISOString().split('T')[0];
+            dateInput.min = today;
+            
+            // Time slot selection
+            const timeSlots = document.querySelectorAll('.time-slot');
+            const timeInput = document.getElementById('time');
+            
+            timeSlots.forEach(slot => {
+              slot.addEventListener('click', function() {
+                timeSlots.forEach(s => s.classList.remove('selected'));
+                this.classList.add('selected');
+                timeInput.value = this.getAttribute('data-value');
+                hideError('time-error');
+              });
+            });
+            
+            // Form elements
+            const form = document.getElementById('bookingForm');
+            const submitBtn = document.getElementById('submitBtn');
+            const btnText = document.getElementById('btnText');
+            const loadingSpinner = document.getElementById('loadingSpinner');
+            const successMessage = document.getElementById('successMessage');
+            
+            // Real-time validation
+            document.getElementById('name').addEventListener('input', validateName);
+            document.getElementById('email').addEventListener('input', validateEmail);
+            document.getElementById('phone').addEventListener('input', validatePhone);
+            document.getElementById('date').addEventListener('change', validateDate);
+            document.getElementById('people').addEventListener('input', validatePeople);
+            
+            function validateName() {
+              const valid = this.value.trim() !== '';
+              validateField(this, 'name-error', valid, 'Please enter your name');
+              return valid;
+            }
+            
+            function validateEmail() {
+              const email = this.value;
+              const valid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+              validateField(this, 'email-error', valid, 'Please enter a valid email');
+              return valid;
+            }
+            
+            function validatePhone() {
+              const phone = this.value;
+              const valid = /^\d{10}$/.test(phone);
+              validateField(this, 'phone-error', valid, 'Please enter a 10-digit number');
+              return valid;
+            }
+            
+            function validateDate() {
+              const valid = this.value !== '';
+              validateField(this, 'date-error', valid, 'Please select a date');
+              return valid;
+            }
+            
+            function validatePeople() {
+              const people = parseInt(this.value);
+              const valid = people >= 1 && people <= 10;
+              validateField(this, 'people-error', valid, 'Please enter 1-10 participants');
+              return valid;
+            }
+            
+            // Form submission
+            form.addEventListener('submit', async function(e) {
+              e.preventDefault();
+              
+              // Validate all fields
+              const isFormValid = [
+                validateName.call(document.getElementById('name')),
+                validateEmail.call(document.getElementById('email')),
+                validatePhone.call(document.getElementById('phone')),
+                validateDate.call(document.getElementById('date')),
+                validateField(timeInput, 'time-error', timeInput.value !== '', 'Please select a time slot'),
+                validatePeople.call(document.getElementById('people'))
+              ].every(valid => valid);
+              
+              if (!isFormValid) return;
+              
+              // Prepare data
+              const bookingData = {
+                name: document.getElementById('name').value.trim(),
+                email: document.getElementById('email').value,
+                phone: document.getElementById('phone').value,
+                date: document.getElementById('date').value,
+                time: timeInput.value,
+                people: parseInt(document.getElementById('people').value),
+                message: document.getElementById('message').value
+              };
+              
+              // Show loading state
+              submitBtn.disabled = true;
+              btnText.textContent = 'Processing...';
+              loadingSpinner.style.display = 'inline-block';
+              
+              try {
+                // Connect to your existing backend
+                const response = await fetch('https://rc-cafe-backend.onrender.com/api/book', {
+                  method: 'POST',
+                  headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify(bookingData)
+                });
+                
+                if (!response.ok) {
+                  const errorData = await response.json();
+                  throw new Error(errorData.error || 'Booking failed');
+                }
+                
+                // Show success
+                form.reset();
+                timeSlots.forEach(s => s.classList.remove('selected'));
+                successMessage.style.display = 'block';
+                setTimeout(() => successMessage.style.display = 'none', 5000);
+                
+              } catch (error) {
+                alert(`Error: ${error.message}`);
+                console.error('Booking error:', error);
+              } finally {
+                submitBtn.disabled = false;
+                btnText.textContent = 'Book Now';
+                loadingSpinner.style.display = 'none';
+              }
+            });
+            
+            function validateField(field, errorId, isValid, errorMessage) {
+              const errorElement = document.getElementById(errorId);
+              if (!isValid) {
+                field.style.borderColor = 'var(--primary)';
+                errorElement.textContent = errorMessage;
+                errorElement.style.display = 'block';
+                return false;
+              } else {
+                field.style.borderColor = '#ddd';
+                errorElement.style.display = 'none';
+                return true;
+              }
+            }
+            
+            function hideError(errorId) {
+              document.getElementById(errorId).style.display = 'none';
+            }
+          });
+          
+        </script>
+      </body>
+      </html>
